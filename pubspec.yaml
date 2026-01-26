@@ -33,7 +33,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  google_fonts: ^8.0.0
   http: ^1.6.0
+  percent_indicator: ^4.2.5
 
 dev_dependencies:
   flutter_lints: ^5.0.0
