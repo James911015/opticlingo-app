@@ -27,7 +27,7 @@ class StudyRemoteDataSourceImpl implements StudyRemoteDataSource {
     String sourceLang,
     String targetLang,
   ) async {
-    final baseUrl = Uri.parse('http://10.0.2.2:8080/api/flashcards');
+    final baseUrl = Uri.parse('http://72.62.169.13:8080/api');
 
     final uri = Uri.parse(
       '$baseUrl/flashcards?source=$sourceLang&target=$targetLang',
