@@ -9,6 +9,8 @@ abstract interface class StudyRemoteDataSource {
     String sourceLang,
     String targetLang,
   );
+
+  Future<void> logStudySession(int cardId, bool isCorrect);
 }
 
 // 2. La Implementación Real
@@ -46,6 +48,35 @@ class StudyRemoteDataSourceImpl implements StudyRemoteDataSource {
       }
     } catch (e) {
       throw Exception('Error de conexión: $e');
+    }
+  }
+
+  @override
+  Future<void> logStudySession(int cardId, bool isCorrect) async {
+    final baseUrl =
+        'http://72.62.169.13:8080/api'; // Asegúrate de tener tu IP aquí
+    final uri = Uri.parse('$baseUrl/progress'); // Asumimos este endpoint
+
+    try {
+      final response = await client.post(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'flashcardId': cardId,
+          'isCorrect': isCorrect,
+          'timestamp': DateTime.now().toIso8601String(),
+        }),
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw Exception('Error al guardar progreso: ${response.statusCode}');
+      }
+    } catch (e) {
+      // En una app real, aquí guardaríamos en base de datos local (SQLite)
+      // para reintentar cuando vuelva el internet (Offline First).
+      // Por ahora, solo imprimimos el error.
+      print("Error enviando progreso: $e");
+      throw Exception('Error de conexión');
     }
   }
 }

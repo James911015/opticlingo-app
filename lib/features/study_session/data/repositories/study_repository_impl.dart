@@ -33,4 +33,9 @@ class StudyRepositoryImpl implements StudyRepository {
       throw Exception('Error al obtener flashcards: $e');
     }
   }
+
+  @override
+  Future<void> logStudySession(int cardId, bool isCorrect) async {
+    await remoteDataSource.logStudySession(cardId, isCorrect);
+  }
 }

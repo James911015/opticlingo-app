@@ -7,6 +7,7 @@ class FlashcardModel extends Flashcard {
     required super.imagePath,
     required super.sourceWord,
     required super.targetWord,
+    required super.id,
     super.phonetic,
   });
 
@@ -20,6 +21,7 @@ class FlashcardModel extends Flashcard {
       sourceWord: json['sourceWord'],
       targetWord: json['targetWord'],
       phonetic: json['phonetic'],
+      id: json['id'],
     );
   }
 

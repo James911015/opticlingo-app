@@ -4,6 +4,7 @@ class Flashcard extends Equatable {
   //Definimos las propiedades inmutables
   //Una vez creadas no pueden ser modificadas
 
+  final int id;
   final String imagePath;
   final String sourceWord;
   final String targetWord;
@@ -13,6 +14,7 @@ class Flashcard extends Equatable {
   //Le decimos: Si dos objetos tienen estos mismos valores en este lista,
   //entonces son iguales.
   const Flashcard({
+    required this.id,
     required this.imagePath,
     required this.sourceWord,
     required this.targetWord,
@@ -20,5 +22,5 @@ class Flashcard extends Equatable {
   });
 
   @override
-  List<Object?> get props => [imagePath, sourceWord, targetWord, phonetic];
+  List<Object?> get props => [id, imagePath, sourceWord, targetWord, phonetic];
 }

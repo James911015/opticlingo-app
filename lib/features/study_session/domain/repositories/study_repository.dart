@@ -7,4 +7,8 @@ abstract class StudyRepository {
   // - Recibe: idioma origen y destino (Strings).
   // - Devuelve: Un 'Future' (porque va a tardar un poco) que contendrá una Lista de 'Flashcard'.
   Future<List<Flashcard>> getFlashcards(String sourceLang, String targeLang);
+
+  // NUEVO MÉTODO:
+  // Recibe el ID de la carta y si la supiste (true) o no (false)
+  Future<void> logStudySession(int cardId, bool isCorrect);
 }
