@@ -89,11 +89,31 @@ class _StudyScreenState extends State<StudyScreen> {
                       child: FlashcardView(
                         key: ValueKey(currentIndex),
                         flashcard: flashcards[currentIndex],
-                        onNext: () {
-                          // Lógica: Avanzar al siguiente índice
-                          setState(() {
-                            currentIndex++;
-                          });
+                        // Reemplazamos 'onNext' por dos acciones específicas:
+                        onKnewIt: () {
+                          // 1. Enviar evento al BLoC (Verde = True)
+                          context.read<StudyBloc>().add(
+                            LogStudyActivityEvent(
+                              cardId: flashcards[currentIndex].id,
+                              isCorrect: true,
+                            ),
+                          );
+
+                          // 2. Avanzar UI
+                          setState(() => currentIndex++);
+                        },
+
+                        onForgot: () {
+                          // 1. Enviar evento al BLoC (Rojo = False)
+                          context.read<StudyBloc>().add(
+                            LogStudyActivityEvent(
+                              cardId: flashcards[currentIndex].id,
+                              isCorrect: false,
+                            ),
+                          );
+
+                          // 2. Avanzar UI
+                          setState(() => currentIndex++);
                         },
                       ),
                     ),
@@ -166,12 +186,14 @@ class _StudyScreenState extends State<StudyScreen> {
 // --- WIDGET DE LA TARJETA (MODIFICADO) ---
 class FlashcardView extends StatefulWidget {
   final Flashcard flashcard;
-  final VoidCallback onNext; // Callback para avisar al padre que pase la carta
+  final VoidCallback onKnewIt;
+  final VoidCallback onForgot;
 
   const FlashcardView({
     super.key,
     required this.flashcard,
-    required this.onNext,
+    required this.onKnewIt,
+    required this.onForgot,
   });
 
   @override
@@ -304,18 +326,38 @@ class _FlashcardViewState extends State<FlashcardView> {
           : Row(
               children: [
                 Expanded(
-                  child: _actionButton("I forgot", const Color(0xFFFF6B6B)),
+                  child: ElevatedButton(
+                    onPressed: widget.onForgot, // Llamamos al callback rojo
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF6B6B),
+                      minimumSize: const Size(double.infinity, 56),
+                    ),
+                    child: const Text(
+                      "I forgot",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: _actionButton("I knew it", const Color(0xFF2ECC71)),
+                  child: ElevatedButton(
+                    onPressed: widget.onKnewIt, // Llamamos al callback verde
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2ECC71),
+                      minimumSize: const Size(double.infinity, 56),
+                    ),
+                    child: const Text(
+                      "I knew it",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ],
             ),
     );
   }
 
-  Widget _actionButton(String text, Color color) {
+  /* Widget _actionButton(String text, Color color) {
     return ElevatedButton(
       onPressed: () {
         // AQUÍ ESTÁ EL CAMBIO CLAVE:
@@ -329,5 +371,5 @@ class _FlashcardViewState extends State<FlashcardView> {
       ),
       child: Text(text, style: const TextStyle(color: Colors.white)),
     );
-  }
+  } */
 }

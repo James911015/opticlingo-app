@@ -10,6 +10,8 @@ class StudyBloc extends Bloc<StudyEvent, StudyState> {
   StudyBloc({required this.repository}) : super(StudyInitial()) {
     // Registramos el manejador del evento
     on<GetFlashcardsEvent>(_onGetFlashcards);
+
+    on<LogStudyActivityEvent>(_onLogStudyActivity);
   }
 
   // Lógica separada para mantener el código limpio
@@ -30,6 +32,25 @@ class StudyBloc extends Bloc<StudyEvent, StudyState> {
     } catch (e) {
       // 4. Si falla, emitimos "Error"
       emit(StudyError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onLogStudyActivity(
+    LogStudyActivityEvent event,
+    Emitter<StudyState> emit,
+  ) async {
+    try {
+      // Llamamos al repositorio para que hable con la API
+      await repository.logStudySession(event.cardId, event.isCorrect);
+
+      // Opcional: Podrías imprimir en consola para depurar
+      print(
+        "Progreso guardado: ID ${event.cardId} - Correcto: ${event.isCorrect}",
+      );
+    } catch (e) {
+      // Si falla, por ahora solo imprimimos.
+      // En el futuro, podríamos guardar en una cola local para reintentar.
+      print("Error guardando progreso: $e");
     }
   }
 }

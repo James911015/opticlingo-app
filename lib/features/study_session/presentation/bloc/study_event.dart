@@ -20,3 +20,14 @@ class GetFlashcardsEvent extends StudyEvent {
   @override
   List<Object> get props => [sourceLang, targetLang];
 }
+
+// Evento: El usuario respondió una carta (Bien o Mal)
+class LogStudyActivityEvent extends StudyEvent {
+  final int cardId;
+  final bool isCorrect;
+
+  const LogStudyActivityEvent({required this.cardId, required this.isCorrect});
+
+  @override
+  List<Object> get props => [cardId, isCorrect];
+}
